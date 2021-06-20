@@ -2,7 +2,7 @@ import mongoose from 'mongoose';
 import express from 'express';
 import path from 'path';
 import Library from './models/library.js'
-import StudySpot from './models/library.js'
+import StudySpot from './models/StudySpot.js'
 
 
 // __direname is undefined when using es6 modules for some reason. 
@@ -39,7 +39,6 @@ app.get('/libraries', async (req, res) => {
 app.get('/libraries/:libId', async (req, res) => {
     const { libId } = req.params;
     const l = await Library.findById(libId).populate('studySpots');
-    console.log(l)
     res.render('libraries/show.ejs', { library: l })
 })
 

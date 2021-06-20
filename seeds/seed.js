@@ -41,7 +41,7 @@ for (let l of l_names) {
 const deleteAllAndInsertMany = async () => {
     await Library.deleteMany({})
     await Library.insertMany(libraries)
-    const lib = await Library.findOne({})
+    const lib = await Library.findOne({ name: 'Advancement, Central Libraries' })
 
     const studySpots = [
         { description: 'a quiet study space', image: getRandomStudySpotImage(), library: lib },
@@ -61,7 +61,7 @@ const deleteAllAndInsertMany = async () => {
 }
 
 const addStudySpotToOneLibriary = async () => {
-    const library = await Library.findOne()
+    const library = await Library.findOne({ name: 'Advancement, Central Libraries' })
     const studySpots = await StudySpot.find({})
 
     library.studySpots.push(...studySpots);
