@@ -15,9 +15,18 @@
     <main>
         <p>location: <%= library.location %>
         </p>
-        <p>
-            <%= library.studySpots %>
-        </p>
+        <h2>study spots</h2>
+        <ul>
+            <% for( let s of library.studySpots) { %>
+                <li>
+                    <img src="../<%= s.image %> " alt="" height=200px width=200px>
+                    <a href="/studySpots/<%= s._id %>/">
+                        <%= s.description %>
+                    </a>
+
+                </li>
+                <% } %>
+        </ul>
     </main>
     <a href="/libraries">Back to all libraries</a>
 </body>

@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Details</title>
+</head>
+
+<body>
+    <h1>Study Spot details</h1>
+    <ul>
+        <li>
+            <!-- why ../ ??????? -->
+            <img src="../../../../../../../<%= studySpot.image %>" alt="" width=200px height=200px>
+        </li>
+        <li>
+            <%= studySpot.description %>
+        </li>
+        <li>view
+            <a href="/libraries/<%= studySpot.library._id %>">
+                <%= studySpot.library.name%>
+            </a>
+        </li>
+    </ul>
+    <a href="/studySpots">back to all study spots</a>
+</body>
+
+</html>

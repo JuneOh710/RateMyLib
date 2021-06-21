@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Study Spots</title>
+</head>
+
+<body>
+    <h1>All Study Spots</h1>
+    <ul>
+        <% for ( let s of studySpots) { %>
+            <li>
+                <img src="<%= s.image %>" alt="" width=200px height=200px>
+                <ul>
+                    <li>
+                        <%= s.description %>
+                    </li>
+                    <li>located in <%= s.library.name %>
+                    </li>
+                    <li>
+                        <%= s.image %>
+                    </li>
+                    <a href="/studySpots/<%= s._id %> ">See in detail</a>
+                </ul>
+
+            </li>
+            <% } %>
+
+    </ul>
+</body>
+
+</html>
