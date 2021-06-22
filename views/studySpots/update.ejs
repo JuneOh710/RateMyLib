@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Update Study Spot</title>
+</head>
+
+<body>
+    <h1>Update this study spot</h1>
+    <form action="/studySpots/<%= studySpot._id %>?_method=PUT" method="POST">
+        <label for="description">Enter study spot description</label>
+        <textarea name="studySpot[description]" id="description" cols="30"
+            rows="10"><%= studySpot.description %> </textarea>
+
+        <label for="library">Enter the library</label>
+        <input type="text" name="studySpot[library]" id="library" value="<%= studySpot.library.name %>">
+
+        <label for="image">Upload an image</label>
+        <input type="text" name="studySpot[image]" id="image" value="<%= studySpot.image %> ">
+
+        <button>submit</button>
+    </form>
+</body>
+
+</html>

@@ -1,9 +1,9 @@
 import mongoose from 'mongoose';
 import express from 'express';
 import path from 'path';
-import Library from './models/library.js'
-import StudySpot from './models/StudySpot.js'
-
+import Library from './models/library.js';
+import StudySpot from './models/StudySpot.js';
+import methodOverride from 'method-override';
 
 // __direname is undefined when using es6 modules for some reason. 
 const __dirname = path.resolve(path.dirname(decodeURI(new URL(import.meta.url).pathname)));
@@ -29,7 +29,7 @@ app.set('views', path.join(__dirname, 'views'))
 
 app.use(express.static('seeds'));
 app.use(express.urlencoded({ extended: true }));
-
+app.use(methodOverride('_method'));
 
 // library routes
 // get home page
@@ -40,13 +40,13 @@ app.get('/', (req, res) => {
 
 // get libraries index page
 app.get('/libraries', async (req, res) => {
-    let libraries = await Library.find({})
+    const libraries = await Library.find({})
     res.render('libraries/index.ejs', { libraries })
 })
 // get library details
 app.get('/libraries/:libId', async (req, res) => {
-    let { libId } = req.params;
-    let library = await Library.findById(libId).populate('studySpots');
+    const { libId } = req.params;
+    const library = await Library.findById(libId).populate('studySpots');
     res.render('libraries/show.ejs', { library })
 })
 
@@ -55,7 +55,7 @@ app.get('/libraries/:libId', async (req, res) => {
 // study spot routes
 // get all study spots 
 app.get('/studySpots', async (req, res) => {
-    let studySpots = await StudySpot.find({}).populate('library', 'name')
+    const studySpots = await StudySpot.find({}).populate('library', 'name')
     res.render('studySpots/index.ejs', { studySpots })
 })
 
@@ -73,10 +73,25 @@ app.post('/studySpots', async (req, res) => {
     res.redirect(`/studySpots/${studySpot._id}`)
 })
 
+
+// update study spot
+app.get('/studySpots/:id/update', async (req, res) => {
+    const { id } = req.params;
+    const studySpot = await StudySpot.findById(id).populate('library', 'name')
+    res.render(`studySpots/update.ejs`, { studySpot })
+})
+app.put('/studySpots/:id', async (req, res) => {
+    const { id } = req.params;
+    const { description, library: libraryName, image } = req.body.studySpot;
+    const library = await Library.findOne({ name: libraryName })
+    const studySpot = await StudySpot.findByIdAndUpdate(id, { description, library, image })
+    res.redirect(`/studySpots/${id}`)
+})
+
 // get details of study spot
 app.get('/studySpots/:id', async (req, res) => {
-    let { id } = req.params;
-    let studySpot = await StudySpot.findById(id).populate('library', 'name')
+    const { id } = req.params;
+    const studySpot = await StudySpot.findById(id).populate('library', 'name')
     res.render('studySpots/show.ejs', { studySpot })
 })
 
