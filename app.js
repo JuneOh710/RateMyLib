@@ -28,6 +28,7 @@ app.set('views', path.join(__dirname, 'views'))
 // const options = { index: false, redirect: false }
 
 app.use(express.static('seeds'));
+app.use(express.urlencoded({ extended: true }));
 
 
 // library routes
@@ -39,14 +40,14 @@ app.get('/', (req, res) => {
 
 // get libraries index page
 app.get('/libraries', async (req, res) => {
-    const libraries = await Library.find({})
+    let libraries = await Library.find({})
     res.render('libraries/index.ejs', { libraries })
 })
 // get library details
 app.get('/libraries/:libId', async (req, res) => {
-    const { libId } = req.params;
-    const l = await Library.findById(libId).populate('studySpots');
-    res.render('libraries/show.ejs', { library: l })
+    let { libId } = req.params;
+    let library = await Library.findById(libId).populate('studySpots');
+    res.render('libraries/show.ejs', { library })
 })
 
 
@@ -54,15 +55,31 @@ app.get('/libraries/:libId', async (req, res) => {
 // study spot routes
 // get all study spots 
 app.get('/studySpots', async (req, res) => {
-    const studySpots = await StudySpot.find({}).populate('library', 'name')
+    let studySpots = await StudySpot.find({}).populate('library', 'name')
     res.render('studySpots/index.ejs', { studySpots })
 })
+
+// add new study spot
+app.get('/studySpots/new', (req, res) => {
+    res.render('studySpots/new.ejs')
+})
+app.post('/studySpots', async (req, res) => {
+    const { description, library: libraryName, image } = req.body.studySpot;
+    const library = await Library.findOne({ name: libraryName })
+    const studySpot = new StudySpot({ description, library, image })
+    library.studySpots.push(studySpot)
+    await library.save()
+    await studySpot.save()
+    res.redirect(`/studySpots/${studySpot._id}`)
+})
+
 // get details of study spot
 app.get('/studySpots/:id', async (req, res) => {
-    const { id } = req.params;
-    const studySpot = await StudySpot.findById(id).populate('library', 'name')
+    let { id } = req.params;
+    let studySpot = await StudySpot.findById(id).populate('library', 'name')
     res.render('studySpots/show.ejs', { studySpot })
 })
+
 
 app.listen(4000, () => {
     console.log('Serving on port 4000')

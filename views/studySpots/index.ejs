@@ -10,6 +10,7 @@
 
 <body>
     <h1>All Study Spots</h1>
+    <a href="/studySpots/new">Add new study spot</a>
     <ul>
         <% for ( let s of studySpots) { %>
             <li>
@@ -19,9 +20,6 @@
                         <%= s.description %>
                     </li>
                     <li>located in <%= s.library.name %>
-                    </li>
-                    <li>
-                        <%= s.image %>
                     </li>
                     <a href="/studySpots/<%= s._id %> ">See in detail</a>
                 </ul>
