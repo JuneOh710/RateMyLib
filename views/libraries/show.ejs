@@ -1,22 +1,13 @@
-<!DOCTYPE html>
-<html lang="en">
+<% layout('layouts/boilerplate.ejs') %>
+    <div class="col-md-10 offset-md-1">
+        <h1>
+            <%= library.name %>
+        </h1>
 
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Library details</title>
-</head>
-
-<body>
-    <h1>
-        <%= library.name %>
-    </h1>
-    <main>
         <p>location: <%= library.location %>
         </p>
         <h2>study spots</h2>
-        <ul>
+        <!-- <ul>
             <% for( let s of library.studySpots) { %>
                 <li>
                     <img src="../<%= s.image %> " alt="" height=200px width=200px>
@@ -26,9 +17,32 @@
 
                 </li>
                 <% } %>
-        </ul>
-    </main>
-    <a href="/libraries">Back to all libraries</a>
-</body>
+        </ul> -->
 
-</html>
+        <% for (let s of library.studySpots){ %>
+            <div class="card" mb-3>
+                <div class="row">
+                    <div class="col-md-4">
+                        <img class="img-fluid" alt="" src="../../<%=s.image%>">
+                    </div>
+                    <div class="col-md-8">
+                        <div class="card-body">
+                            <p class="card-text">
+                                <%= s.description %>
+                            </p>
+                            <p class="card-text">
+                                <small class="text-muted">
+                                    found in <%= library.name %>
+                                </small>
+                            </p>
+                            <a class="btn btn-primary" href="/studySpots/<%=s._id%>">Details
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <% } %>
+
+                <a class="btn btn-info" href="/libraries">Back to all libraries</a>
+                <a class="btn btn-primary" href="/studySpots">See all study spots on campus</a>
+    </div>

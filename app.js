@@ -4,8 +4,10 @@ import path from 'path';
 import Library from './models/library.js';
 import StudySpot from './models/StudySpot.js';
 import methodOverride from 'method-override';
+import engine from 'ejs-mate';
 
-// __direname is undefined when using es6 modules for some reason. 
+// __dirname is undefined when using es6 modules for some reason. 
+// so define __dirname as below
 const __dirname = path.resolve(path.dirname(decodeURI(new URL(import.meta.url).pathname)));
 
 // connecting to mongoose
@@ -13,23 +15,20 @@ mongoose.connect('mongodb://localhost:27017/rateMyLib', {
     useNewUrlParser: true,
     useCreateIndex: true,
     useUnifiedTopology: true,
-    useFindAndModify: false
+    useFindAndModify: false  // added these options as suggested by docs and warnings.
 })
     .then(console.log('Database connected'))
     .catch(err => console.log('connection error:', err))
 const app = express();
 
-
+app.engine('ejs', engine);  // use layout system 
 app.set('view engine', 'ejs');
-app.set('views', path.join(__dirname, 'views'))
+app.set('views', path.join(__dirname, 'views'))  // set absolute file path to views
 
-
-// I don't know what I'm doing here.
-// const options = { index: false, redirect: false }
 
 app.use(express.static('seeds'));
-app.use(express.urlencoded({ extended: true }));
-app.use(methodOverride('_method'));
+app.use(express.urlencoded({ extended: true }));  // to parse req.body from html form
+app.use(methodOverride('_method'));  // to make put and delete requests from html form
 
 // library routes
 // get home page
@@ -78,7 +77,7 @@ app.post('/studySpots', async (req, res) => {
 app.get('/studySpots/:id/edit', async (req, res) => {
     const { id } = req.params;
     const studySpot = await StudySpot.findById(id).populate('library', 'name')
-    res.render(`studySpots/update.ejs`, { studySpot })
+    res.render(`studySpots/edit.ejs`, { studySpot })
 })
 app.put('/studySpots/:id', async (req, res) => {
     const { id } = req.params;

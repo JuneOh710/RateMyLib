@@ -1,34 +1,27 @@
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Libraries</title>
-</head>
-
-<body>
-    <h1>all libraries!</h1>
-
-    <ul>
-
-        <% for (let l of libraries) { %>
-            <li>
-                <a href="/libraries/<%= l._id %> ">
-                    <%= l.name %>
-                </a>
-                <ul>
-                    <li>
-                        <%= l.location %>
-                    </li>
-
-                    <li><img src="<%= l.image %>" width="200" height="200"></li>
-                </ul>
-            </li>
+<% layout('layouts/boilerplate.ejs') %>
+    <div class="col-md-10 offset-md-1">
+        <h1>all libraries!</h1>
+        <% for (let l of libraries){ %>
+            <div class="card" mb-3>
+                <div class="row">
+                    <div class="col-md-4">
+                        <img class="img-fluid" alt="" src="<%=l.image%>">
+                    </div>
+                    <div class="col-md-8">
+                        <div class="card-body">
+                            <p class="card-text">
+                                <%= l.name %>
+                            </p>
+                            <!-- <p class="card-text">
+                            <small class="text-muted">
+                                <%= %>
+                            </small>
+                        </p> -->
+                            <a class="btn btn-primary" href="/libraries/<%=l._id%>">View this library
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
             <% } %>
-
-    </ul>
-</body>
-
-</html>
+    </div>

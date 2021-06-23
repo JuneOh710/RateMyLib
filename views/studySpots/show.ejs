@@ -1,34 +1,31 @@
-<!DOCTYPE html>
-<html lang="en">
+<% layout('layouts/boilerplate.ejs') %>
+    <div class="col-10 offset-1">
+        <h1>Study Spot details</h1>
 
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Details</title>
-</head>
+        <div class="card mb-3">
+            <img src="../../../<%= studySpot.image%>" class="card-img-top" alt="...">
+            <div class="card-body">
+                <h5 class="card-title">
+                    Study spot by [username?]
+                </h5>
+                <p class="card-text">
+                    <%= studySpot.description%>
+                </p>
+            </div>
+            <ul class="list-group list-group-flush">
 
-<body>
-    <h1>Study Spot details</h1>
-    <ul>
-        <li>
-            <!-- why "../" ??????? -->
-            <img src="../../../../../../../<%= studySpot.image %>" alt="" width=200px height=200px>
-        </li>
-        <li>
-            <%= studySpot.description %>
-        </li>
-        <li>view
-            <a href="/libraries/<%= studySpot.library._id %>">
-                <%= studySpot.library.name%>
-            </a>
-        </li>
-    </ul>
-    <a href="/studySpots">back to all study spots</a>
-    <a href="/studySpots/<%= studySpot._id %>/update">update this study spot</a>
-    <form action="/studySpots/<%= studySpot._id %>?_method=DELETE" method=POST>
-        <button>Delete this study spot</button>
-    </form>
-</body>
+                <li class="list-group-item text-muted">view <a href="/libraries/<%= studySpot.library._id %>">
+                        <%= studySpot.library.name %>
+                    </a>
+                </li>
 
-</html>
+            </ul>
+            <div class="card-body">
+                <a class="card-link btn btn-info" href="/studySpots/<%=studySpot._id%>/edit">Edit</a>
+                <form class="d-inline" action="/studySpots/<%=studySpot._id%>?_method=DELETE" method="POST">
+                    <button class="btn btn-danger">Delete</button>
+                </form>
+            </div>
+
+        </div>
+    </div>

@@ -1,32 +1,29 @@
-<!DOCTYPE html>
-<html lang="en">
+<% layout('layouts/boilerplate.ejs') %>
 
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Study Spots</title>
-</head>
+    <div class="col-md-10 offset-md-1">
+        <h1>All Study Spots</h1>
 
-<body>
-    <h1>All Study Spots</h1>
-    <a href="/studySpots/new">Add new study spot</a>
-    <ul>
-        <% for ( let s of studySpots) { %>
-            <li>
-                <img src="<%= s.image %>" alt="" width=200px height=200px>
-                <ul>
-                    <li>
-                        <%= s.description %>
-                    </li>
-                    <li>located in <%= s.library.name %>
-                    </li>
-                    <a href="/studySpots/<%= s._id %> ">See in detail</a>
-                </ul>
-            </li>
+        <% for (let s of studySpots){ %>
+            <div class="card" mb-3>
+                <div class="row">
+                    <div class="col-md-4">
+                        <img class="img-fluid" alt="" src="<%=s.image%>">
+                    </div>
+                    <div class="col-md-8">
+                        <div class="card-body">
+                            <p class="card-text">
+                                <%= s.description %>
+                            </p>
+                            <p class="card-text">
+                                <small class="text-muted">
+                                    located in <%= s.library.name %>
+                                </small>
+                            </p>
+                            <a class="btn btn-primary" href="/studySpots/<%=s._id%>">Details
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
             <% } %>
-
-    </ul>
-</body>
-
-</html>
+    </div>
