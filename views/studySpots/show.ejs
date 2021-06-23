@@ -12,7 +12,7 @@
     <h1>Study Spot details</h1>
     <ul>
         <li>
-            <!-- why ../ ??????? -->
+            <!-- why "../" ??????? -->
             <img src="../../../../../../../<%= studySpot.image %>" alt="" width=200px height=200px>
         </li>
         <li>
@@ -26,6 +26,9 @@
     </ul>
     <a href="/studySpots">back to all study spots</a>
     <a href="/studySpots/<%= studySpot._id %>/update">update this study spot</a>
+    <form action="/studySpots/<%= studySpot._id %>?_method=DELETE" method=POST>
+        <button>Delete this study spot</button>
+    </form>
 </body>
 
 </html>

@@ -74,8 +74,8 @@ app.post('/studySpots', async (req, res) => {
 })
 
 
-// update study spot
-app.get('/studySpots/:id/update', async (req, res) => {
+// edit study spot
+app.get('/studySpots/:id/edit', async (req, res) => {
     const { id } = req.params;
     const studySpot = await StudySpot.findById(id).populate('library', 'name')
     res.render(`studySpots/update.ejs`, { studySpot })
@@ -93,6 +93,17 @@ app.get('/studySpots/:id', async (req, res) => {
     const { id } = req.params;
     const studySpot = await StudySpot.findById(id).populate('library', 'name')
     res.render('studySpots/show.ejs', { studySpot })
+})
+
+// delete study spot
+app.delete('/studySpots/:id', async (req, res) => {
+    const { id } = req.params;
+    const studySpot = await StudySpot.findByIdAndDelete(id)
+    const library = await Library.findById(studySpot.library)
+    // delete the studySpot id in the libary document 
+    library.studySpots = library.studySpots.filter(s => s._id !== id)
+    await library.save()
+    res.redirect(`/libraries/${library._id}`)
 })
 
 
