@@ -105,7 +105,6 @@ app.delete('/studySpots/:id', async (req, res) => {
     res.redirect(`/libraries/${library._id}`)
 })
 
-
 app.listen(4000, () => {
     console.log('Serving on port 4000')
 })
