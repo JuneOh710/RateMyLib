@@ -1,5 +1,5 @@
 <% layout('layouts/boilerplate.ejs') %>
-    <div class="col-10 offset-1">
+    <div class="col-lg-10 offset-lg-1">
         <h1>Study Spot details</h1>
 
         <div class="card mb-3">
@@ -11,10 +11,11 @@
                 <p class="card-text">
                     <%= studySpot.description%>
                 </p>
+
             </div>
             <ul class="list-group list-group-flush">
 
-                <li class="list-group-item text-muted">view <a href="/libraries/<%= studySpot.library._id %>">
+                <li class="list-group-item text-muted">found in <a href="/libraries/<%= studySpot.library._id %>">
                         <%= studySpot.library.name %>
                     </a>
                 </li>
