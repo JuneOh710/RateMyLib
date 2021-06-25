@@ -1,6 +1,7 @@
-import express from 'express';
-import validateStudySpot from '../expressMiddleware.js'
-import StudySpot from '../models/studySpot.js';
+import express from 'express'
+import validateStudySpot from '../utilities/expressMiddleware.js'
+import StudySpot from '../models/studySpot.js'
+import Library from '../models/library.js'
 const studySpotRouter = express.Router()
 
 // get all study spots 
