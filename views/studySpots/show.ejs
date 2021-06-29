@@ -1,5 +1,5 @@
 <% layout('layouts/boilerplate.ejs') %>
-    <div class="col-lg-10 offset-lg-1">
+    <div class="col-lg-8 offset-lg-2">
         <h1>Study Spot details</h1>
 
         <div class="card mb-3">
@@ -14,7 +14,11 @@
 
             </div>
             <ul class="list-group list-group-flush">
-
+                <li class="list-group-item">
+                    <!-- when averageRating is NaN, it is not equal to even itself, so we check by: -->
+                    <%= averageRating==="NaN" ? "-no vatings available-" : `${averageRating}/5.0`%>
+                        </a>
+                </li>
                 <li class="list-group-item text-muted">found in <a href="/libraries/<%= studySpot.library._id %>">
                         <%= studySpot.library.name %>
                     </a>
@@ -26,7 +30,20 @@
                 <form class="d-inline" action="/studySpots/<%=studySpot._id%>?_method=DELETE" method="POST">
                     <button class="btn btn-danger">Delete</button>
                 </form>
+                <form action="/studySpots/<%= studySpot._id %>/rate?_method=PATCH" method="POST">
+                    <label for="rating" class="form-label">Rate</label>
+                    <input type="range" class="form-range" id="rating" step="1" min="1" max="5"
+                        name="studySpot[rating]">
+                    <button class="btn btn-primary">Submit rating</button>
+                </form>
             </div>
-
+            <% for( let rating of studySpot.ratings ) { %>
+                <div class="card-body">
+                    <form action="/studySpots/<%= studySpot._id %>/rate/<%= rating._id %>?_method=DELETE" method="POST">
+                        <input type="range" class="form-label" value="<%= rating.score %>" min="1" max="5" step="1">
+                        <button class="btn btn-danger">Delete rating</button>
+                    </form>
+                </div>
+                <% } %>
         </div>
     </div>

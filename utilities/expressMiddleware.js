@@ -12,4 +12,14 @@ const validateStudySpot = (req, res, next) => {
     next()
 }
 
-export { validateStudySpot as default }
+const validateRating = (req, res, next) => {
+    if (!req.body.studySpot) {
+        return next(new AppError('there must be a rating', 404))
+    }
+    const { rating } = req.body.studySpot;
+    if (rating < 1 || rating > 5) {
+        return next(new AppError('rating must be in between 1 and 5', 404))
+    }
+    return next()
+}
+export { validateStudySpot, validateRating }

@@ -13,7 +13,11 @@ const studySpotSchema = new mongoose.Schema({
     library: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Library'
-    }
+    },
+    ratings: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Rating'
+    }]
 })
 
 const StudySpot = mongoose.model('StudySpot', studySpotSchema);

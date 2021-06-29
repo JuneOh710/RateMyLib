@@ -5,6 +5,7 @@ import methodOverride from 'method-override'
 import engine from 'ejs-mate'
 import studySpotRouter from './routers/studySpotRoutes.js'
 import libraryRouter from './routers/libraryRoutes.js'
+import AppError from './utilities/AppError.js'
 
 // __dirname is undefined when using es6 modules for some reason. 
 // so define __dirname as below
@@ -22,15 +23,15 @@ mongoose.connect('mongodb://localhost:27017/rateMyLib', {
 const app = express();
 
 app.engine('ejs', engine);  // use layout system 
-app.set('view engine', 'ejs');
+app.set('view engine', 'ejs');  // read ejs files
 app.set('views', path.join(__dirname, 'views'))  // set absolute file path to views
 
 
 app.use(express.static('seeds'));
-app.use(express.urlencoded({ extended: true }));  // to parse req.body from html form
+app.use(express.urlencoded({ extended: true }));  // to parse req.body from req from html form 
 app.use(methodOverride('_method'));  // to make put and delete requests from html form
 
-// home page
+// home route
 app.get('/', (req, res) => {
     res.render('home.ejs')
 })
@@ -40,6 +41,11 @@ app.use('/libraries', libraryRouter)
 
 // study spot routes
 app.use('/studySpots', studySpotRouter)
+
+// any other routes that does not exist
+app.all('*', (req, res, next) => {
+    next(new AppError('this page does not exist', 404))
+})
 
 // error handler
 app.use((err, req, res, next) => {
