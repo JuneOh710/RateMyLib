@@ -62,6 +62,10 @@ studySpotRouter.delete('/:id', async (req, res) => {
     const library = await Library.findById(studySpot.library).catch(err => next(err))
     // delete the studySpot id in the libary document 
     library.studySpots = library.studySpots.filter(s => s._id !== id)
+    // delete all ratings associated to the studySpot
+    for (let rating of studySpot.ratings) {
+        await Rating.findByIdAndDelete(rating)
+    }
     await library.save().catch(err => next(err))
     res.redirect(`/libraries/${library._id}`)
 })
