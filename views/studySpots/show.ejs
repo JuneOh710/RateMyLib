@@ -1,65 +1,86 @@
 <% layout('layouts/boilerplate.ejs') %>
     <div class="col-lg-8 offset-lg-2">
         <h1>Study Spot details</h1>
+        <div class="row">
+            <div class="col-lg-6">
 
-        <div class="card mb-3">
-            <img src="../../../<%= studySpot.image%>" class="card-img-top img-fluid rounded" alt="...">
-            <div class="card-body">
-                <h5 class="card-title">
-                    Study spot by [username?]
-                </h5>
-                <p class="card-text">
-                    <%= studySpot.description%>
-                </p>
+                <div class="card mb-3">
+                    <img src="../../../<%= studySpot.image%>" class="card-img-top img-fluid rounded" alt="...">
+                    <div class="card-body">
+                        <h5 class="card-title">
+                            Study spot by [username?]
+                        </h5>
+                        <p class="card-text">
+                            <%= studySpot.description%>
+                        </p>
 
-            </div>
-            <ul class="list-group list-group-flush">
-                <li class="list-group-item">
-                    <!-- when averageRating is NaN, it is not equal to even itself, so we check by: -->
-                    <%= averageRating==="NaN" ? "-no vatings available-" : `${averageRating}/5.0`%>
-                        </a>
-                </li>
-                <li class="list-group-item text-muted">found in <a href="/libraries/<%= studySpot.library._id %>">
-                        <%= studySpot.library.name %>
-                    </a>
-                </li>
+                    </div>
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item">
+                            <!-- when averageRating is NaN, it is not equal to even itself, so we check by: -->
+                            <%= averageRating==="NaN" ? "-no vatings available-" : `${averageRating}/5.0`%>
+                                </a>
+                        </li>
+                        <li class="list-group-item text-muted">found in <a
+                                href="/libraries/<%= studySpot.library._id %>">
+                                <%= studySpot.library.name %>
+                            </a>
+                        </li>
+                        <li class="list-group-item">
+                            <!-- edit button -->
+                            <a class="card-link btn btn-info" href="/studySpots/<%=studySpot._id%>/edit">Edit</a>
+                            <!-- delete button -->
+                            <form class="d-inline" action="/studySpots/<%=studySpot._id%>?_method=DELETE" method="POST">
+                                <button class="btn btn-danger">Delete</button>
+                            </form>
+                        </li>
 
-            </ul>
-            <!-- delete button -->
-            <div class="card-body">
-                <a class="card-link btn btn-info" href="/studySpots/<%=studySpot._id%>/edit">Edit</a>
-                <form class="d-inline" action="/studySpots/<%=studySpot._id%>?_method=DELETE" method="POST">
-                    <button class="btn btn-danger">Delete</button>
-                </form>
-                <!-- add rating -->
-                <form action="/studySpots/<%= studySpot._id %>/rate?_method=PATCH" method="POST">
-                    <label for="rating" class="form-label">Rate</label>
-                    <input type="range" class="form-range" id="rating" step="1" min="1" max="5"
-                        name="studySpot[rating]">
-                    <button class="btn btn-primary">Submit rating</button>
-                </form>
-            </div>
-            <!-- ratings list -->
-            <% for( let rating of studySpot.ratings ) { %>
-                <div class="card-body">
-                    <!-- edit-form that displays existing rating score -->
-                    <form class="edit-form d-inline-block"
-                        action="/studySpots/<%= studySpot._id %>/rate/<%= rating._id %>?_method=PATCH" method="POST">
-                        <input type="range" class="edit-range" value="<%= rating.score %>" name="studySpot[rating]"
-                            min="1" max="5" step="1" disabled>
-                        <button type="button" class="edit-button btn btn-info">Edit rating</button>
-                    </form>
-
-                    <!-- delete existing rating -->
-                    <form class="d-inline-block"
-                        action="/studySpots/<%= studySpot._id %>/rate/<%= rating._id %>?_method=DELETE" method="POST">
-                        <button class="btn btn-danger">Delete rating</button>
-                    </form>
-
+                    </ul>
                 </div>
-                <% } %>
+            </div>
+
+            <!-- study spot rating -->
+            <div class="col-lg-6">
+                <div class="card mb-3">
+                    <!-- rate studySpot -->
+                    <div class="card-body">
+                        <form action="/studySpots/<%= studySpot._id %>/rate?_method=PATCH" method="POST">
+                            <label for="rating" class="h5 form-label">Rate this study spot</label>
+                            <input type="range" class="form-range" id="rating" step="1" min="1" max="5"
+                                name="studySpot[rating]">
+                            <button class="btn btn-primary">Submit rating</button>
+                        </form>
+                    </div>
+
+                    <!-- ratings list -->
+                    <% for( let rating of studySpot.ratings ) { %>
+                        <div class="card-body">
+                            <!-- edit-form that displays existing rating score -->
+                            <form class="edit-form d-inline-block"
+                                action="/studySpots/<%= studySpot._id %>/rate/<%= rating._id %>?_method=PATCH"
+                                method="POST">
+                                <input type="range" class="edit-range" value="<%= rating.score %>"
+                                    name="studySpot[rating]" min="1" max="5" step="1" disabled>
+                                <button type="button" class="edit-button btn btn-info">Edit</button>
+                            </form>
+
+                            <!-- delete existing rating -->
+                            <form class="d-inline-block"
+                                action="/studySpots/<%= studySpot._id %>/rate/<%= rating._id %>?_method=DELETE"
+                                method="POST">
+                                <button class="btn btn-danger">Delete</button>
+                            </form>
+
+                        </div>
+                        <% } %>
+                </div>
+
+            </div>
         </div>
+
+
     </div>
+
     <script>
         const editButtons = document.querySelectorAll('.edit-button');
         const ranges = document.querySelectorAll('.edit-range');
