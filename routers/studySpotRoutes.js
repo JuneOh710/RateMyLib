@@ -67,6 +67,8 @@ studySpotRouter.delete('/:id', async (req, res) => {
 })
 
 
+
+
 // rating routes
 // add rating to studySpot
 studySpotRouter.patch('/:id/rate', validateRating, async (req, res, next) => {
@@ -81,7 +83,6 @@ studySpotRouter.patch('/:id/rate', validateRating, async (req, res, next) => {
     res.redirect(`/studySpots/${id}`)
 })
 
-
 // delete rating from studySpot
 studySpotRouter.delete('/:spotId/rate/:ratingId', async (req, res, next) => {
     const { spotId, ratingId } = req.params;
@@ -94,5 +95,17 @@ studySpotRouter.delete('/:spotId/rate/:ratingId', async (req, res, next) => {
         .catch(err => next(err))
     res.redirect(`/studySpots/${spotId}`)
 })
+
+
+// edit rating from studySpot
+studySpotRouter.patch('/:spotId/rate/:ratingId', async (req, res, next) => {
+    const { spotId, ratingId } = req.params;
+    const { rating: newScore } = req.body.studySpot;
+    await Rating.findByIdAndUpdate(ratingId, { score: newScore })
+        .catch(err => next(err))
+    res.redirect(`/studySpots/${spotId}`)
+})
+
+
 
 export { studySpotRouter as default }
