@@ -17,7 +17,11 @@ const studySpotSchema = new mongoose.Schema({
     ratings: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Rating'
-    }]
+    }],
+    username: {
+        type: String,
+        required: true
+    }
 })
 
 const StudySpot = mongoose.model('StudySpot', studySpotSchema);

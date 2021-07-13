@@ -59,8 +59,10 @@ passport.deserializeUser(User.deserializeUser())
 app.use(cookieParser('mySecret'))
 // setup flash 
 app.use(flash())
-// flash middleware
+// flash & locals middleware
 app.use((req, res, next) => {
+    // make currentUser available as a global variable in files rendering in this request 
+    res.locals.currentUser = req.user  // included in req body by passport.js
     res.locals.success = req.flash('success')  // undefined unless created new spot
     res.locals.error = req.flash('error')
     next()
@@ -69,23 +71,6 @@ app.use((req, res, next) => {
 // home route
 app.get('/', (req, res) => {
     res.render('home.ejs')
-})
-
-app.get('/fakeUser', async (req, res) => {
-    const newUser = new User({ username: 'June', email: 'june@gmail.com' })
-    const registeredUser = await User.register(newUser, 'this is my password')
-    res.send(registeredUser)
-})
-
-app.get('/count', (req, res) => {
-    res.cookie('name', 'June', { secure: true, signed: true })
-    if (req.session.count) {
-        req.session.count += 1;
-        res.send(`viewed this page ${req.session.count} times`)
-    } else {
-        req.session.count = 1;
-        res.send('viewed this page only once')
-    }
 })
 
 // library routes

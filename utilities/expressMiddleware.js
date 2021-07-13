@@ -1,6 +1,6 @@
 import studySpotValidator from './joiSchema.js'
-import AppError from './AppError.js';
-
+import AppError from './AppError.js'
+import passport from 'passport'
 
 // server-side validation middleware
 const validateStudySpot = (req, res, next) => {
@@ -22,4 +22,13 @@ const validateRating = (req, res, next) => {
     }
     return next()
 }
-export { validateStudySpot, validateRating }
+
+const isLoggedIn = (req, res, next) => {
+    if (!req.isAuthenticated()) {
+        req.flash('error', 'you must be logged in')
+        return res.redirect('/login')
+    }
+    next()
+}
+
+export { validateStudySpot, validateRating, isLoggedIn }

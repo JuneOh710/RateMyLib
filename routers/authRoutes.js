@@ -1,6 +1,6 @@
 import express from 'express'
 import User from '../models/user.js'
-import AppError from '../utilities/AppError.js'
+import passport from 'passport'
 
 const authRouter = express.Router()
 
@@ -20,5 +20,22 @@ authRouter.post('/register', async (req, res, next) => {
         req.flash('error', err.message)
         res.redirect('/register')
     }
+})
+
+authRouter.get('/login', (req, res) => {
+    res.render('users/login')
+})
+
+authRouter.post('/login',
+    passport.authenticate('local', { failureFlash: true, failureRedirect: '/login' }),
+    (req, res) => {
+        req.flash('success', 'you are logged in!')
+        res.redirect('/libraries')
+    })
+
+authRouter.get('/logout', (req, res) => {
+    req.logout()
+    req.flash('success', 'logged out')
+    res.redirect('/')
 })
 export { authRouter as default }

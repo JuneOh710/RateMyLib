@@ -3,16 +3,17 @@
     <div class="col-lg-8 offset-lg-2">
         <h1>Study Spot details</h1>
         <div class="row">
-            <div class="col-lg-6">
+            <div class="">
 
                 <div class="card mb-3">
                     <img src="../../../<%= studySpot.image%>" class="card-img-top img-fluid rounded" alt="...">
                     <div class="card-body">
                         <h5 class="card-title">
-                            Study spot by [username?]
+                            <%= studySpot.description%>
+
                         </h5>
                         <p class="card-text">
-                            <%= studySpot.description%>
+                            Study spot by <%= studySpot.username %>
                         </p>
 
                     </div>
@@ -41,7 +42,7 @@
             </div>
 
             <!-- study spot rating -->
-            <div class="col-lg-6">
+            <div class="">
                 <div class="card mb-3">
                     <!-- rate studySpot -->
                     <div class="card-body">

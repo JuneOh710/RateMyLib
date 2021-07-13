@@ -1,5 +1,5 @@
 import express from 'express'
-import { validateStudySpot, validateRating } from '../utilities/expressMiddleware.js'
+import { validateStudySpot, validateRating, isLoggedIn } from '../utilities/expressMiddleware.js'
 import StudySpot from '../models/studySpot.js'
 import Library from '../models/library.js'
 import Rating from '../models/rating.js'
@@ -14,13 +14,14 @@ studySpotRouter.get('/', async (req, res) => {
 
 
 // add new study spot
-studySpotRouter.get('/new', (req, res) => {
-    res.render('studySpots/new.ejs')
+studySpotRouter.get('/new', isLoggedIn, async (req, res) => {
+    const libraries = await Library.find({}).catch(err => next(err))
+    res.render('studySpots/new.ejs', { libraries })
 })
-studySpotRouter.post('/', validateStudySpot, async (req, res, next) => {
-    const { description, library: libraryName, image } = req.body.studySpot;
+studySpotRouter.post('/', isLoggedIn, validateStudySpot, async (req, res, next) => {
+    const { description, library: libraryName, image, username } = req.body.studySpot;
     const library = await Library.findOne({ name: libraryName }).catch(err => next(err))
-    const studySpot = new StudySpot({ description, library, image })
+    const studySpot = new StudySpot({ description, library, image, username })
     library.studySpots.push(studySpot)
     await library.save().catch(err => next(err))
     await studySpot.save().catch(err => next(err))
@@ -30,12 +31,12 @@ studySpotRouter.post('/', validateStudySpot, async (req, res, next) => {
 
 
 // edit study spot
-studySpotRouter.get('/:id/edit', async (req, res) => {
+studySpotRouter.get('/:id/edit', isLoggedIn, async (req, res) => {
     const { id } = req.params;
     const studySpot = await StudySpot.findById(id).populate('library', 'name').catch(err => next(err))
     res.render(`studySpots/edit.ejs`, { studySpot })
 })
-studySpotRouter.put('/:id', validateStudySpot, async (req, res) => {
+studySpotRouter.put('/:id', isLoggedIn, validateStudySpot, async (req, res) => {
     const { id } = req.params;
     const { description, library: libraryName, image } = req.body.studySpot;
     const library = await Library.findOne({ name: libraryName }).catch(err => next(err))
@@ -57,7 +58,7 @@ studySpotRouter.get('/:id', async (req, res) => {
 
 
 // delete study spot
-studySpotRouter.delete('/:id', async (req, res) => {
+studySpotRouter.delete('/:id', isLoggedIn, async (req, res) => {
     const { id } = req.params;
     const studySpot = await StudySpot.findByIdAndDelete(id).catch(err => next(err))
     const library = await Library.findById(studySpot.library).catch(err => next(err))
@@ -76,7 +77,7 @@ studySpotRouter.delete('/:id', async (req, res) => {
 
 // rating routes
 // add rating to studySpot
-studySpotRouter.patch('/:id/rate', validateRating, async (req, res, next) => {
+studySpotRouter.patch('/:id/rate', isLoggedIn, validateRating, async (req, res, next) => {
     const { rating: score } = req.body.studySpot;
     const { id } = req.params;
     const rating = new Rating({ score, user: 'placeHolder' })
@@ -89,7 +90,7 @@ studySpotRouter.patch('/:id/rate', validateRating, async (req, res, next) => {
 })
 
 // delete rating from studySpot
-studySpotRouter.delete('/:spotId/rate/:ratingId', async (req, res, next) => {
+studySpotRouter.delete('/:spotId/rate/:ratingId', isLoggedIn, async (req, res, next) => {
     const { spotId, ratingId } = req.params;
     await Rating.findByIdAndDelete(ratingId)
         .catch(err => next(err))
@@ -103,7 +104,7 @@ studySpotRouter.delete('/:spotId/rate/:ratingId', async (req, res, next) => {
 
 
 // edit rating from studySpot
-studySpotRouter.patch('/:spotId/rate/:ratingId', async (req, res, next) => {
+studySpotRouter.patch('/:spotId/rate/:ratingId', isLoggedIn, async (req, res, next) => {
     const { spotId, ratingId } = req.params;
     const { rating: newScore } = req.body.studySpot;
     await Rating.findByIdAndUpdate(ratingId, { score: newScore })
