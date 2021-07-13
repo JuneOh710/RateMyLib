@@ -24,6 +24,7 @@ studySpotRouter.post('/', validateStudySpot, async (req, res, next) => {
     library.studySpots.push(studySpot)
     await library.save().catch(err => next(err))
     await studySpot.save().catch(err => next(err))
+    req.flash('success', 'study spot saved!')
     res.redirect(`/studySpots/${studySpot._id}`)
 })
 
