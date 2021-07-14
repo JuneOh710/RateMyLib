@@ -20,6 +20,10 @@
             <input class="form-control" type="text" name="studySpot[image]" id="image" value="<%= studySpot.image %>"
                 required>
         </div>
+        <div class="mb-3">
+            <input class="form-control" type="text" name="studySpot[username]" id="username"
+                value="<%= currentUser.username %>" hidden>
+        </div>
 
         <button type="submit" class="btn btn-primary">submit</button>
     </form>

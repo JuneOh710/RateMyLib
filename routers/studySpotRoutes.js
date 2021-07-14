@@ -38,15 +38,15 @@ studySpotRouter.get('/:id/edit', isLoggedIn, async (req, res) => {
 })
 studySpotRouter.put('/:id', isLoggedIn, validateStudySpot, async (req, res) => {
     const { id } = req.params;
-    const { description, library: libraryName, image } = req.body.studySpot;
+    const { description, library: libraryName, image, username } = req.body.studySpot;
     const library = await Library.findOne({ name: libraryName }).catch(err => next(err))
-    await StudySpot.findByIdAndUpdate(id, { description, library, image }).catch(err => next(err))
+    await StudySpot.findByIdAndUpdate(id, { description, library, image, username }).catch(err => next(err))
     res.redirect(`/studySpots/${id}`)
 })
 
 
 // get details of study spot
-studySpotRouter.get('/:id', async (req, res) => {
+studySpotRouter.get('/:id', isLoggedIn, async (req, res) => {
     const { id } = req.params;
     const studySpot = await StudySpot.findById(id).populate('library', 'name').populate('ratings', 'score')
         .catch(err => next(err))

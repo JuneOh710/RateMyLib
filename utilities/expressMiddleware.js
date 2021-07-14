@@ -25,6 +25,7 @@ const validateRating = (req, res, next) => {
 
 const isLoggedIn = (req, res, next) => {
     if (!req.isAuthenticated()) {
+        req.session.previousUrl = req.originalUrl;
         req.flash('error', 'you must be logged in')
         return res.redirect('/login')
     }

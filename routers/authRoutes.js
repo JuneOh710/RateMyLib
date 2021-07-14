@@ -13,6 +13,7 @@ authRouter.post('/register', async (req, res, next) => {
     const newUser = new User({ username, email })
     try {
         const registeredUser = await User.register(newUser, password)
+        req.login(registeredUser, error => { if (error) return next(error) })
         req.flash('success', 'you are now registered!')
         res.redirect('/libraries')
     }
@@ -30,7 +31,8 @@ authRouter.post('/login',
     passport.authenticate('local', { failureFlash: true, failureRedirect: '/login' }),
     (req, res) => {
         req.flash('success', 'you are logged in!')
-        res.redirect('/libraries')
+        const returnTo = req.session.previousUrl || '/';
+        res.redirect(returnTo)
     })
 
 authRouter.get('/logout', (req, res) => {
