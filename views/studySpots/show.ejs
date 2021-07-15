@@ -13,7 +13,7 @@
 
                         </h5>
                         <p class="card-text">
-                            Study spot by <%= studySpot.username %>
+                            Submitted by <%= studySpot.username %>
                         </p>
 
                     </div>
@@ -28,15 +28,17 @@
                                 <%= studySpot.library.name %>
                             </a>
                         </li>
-                        <li class="list-group-item">
-                            <!-- edit button -->
-                            <a class="card-link btn btn-info" href="/studySpots/<%=studySpot._id%>/edit">Edit</a>
-                            <!-- delete button -->
-                            <form class="d-inline" action="/studySpots/<%=studySpot._id%>?_method=DELETE" method="POST">
-                                <button class="btn btn-danger">Delete</button>
-                            </form>
-                        </li>
-
+                        <% if (currentUser && studySpot.username===currentUser.username) { %>
+                            <li class="list-group-item">
+                                <!-- edit button -->
+                                <a class="card-link btn btn-info" href="/studySpots/<%=studySpot._id%>/edit">Edit</a>
+                                <!-- delete button -->
+                                <form class="d-inline" action="/studySpots/<%=studySpot._id%>?_method=DELETE"
+                                    method="POST">
+                                    <button class="btn btn-danger">Delete</button>
+                                </form>
+                            </li>
+                            <% } %>
                     </ul>
                 </div>
             </div>

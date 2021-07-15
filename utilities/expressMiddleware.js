@@ -1,6 +1,5 @@
 import studySpotValidator from './joiSchema.js'
 import AppError from './AppError.js'
-import passport from 'passport'
 
 // server-side validation middleware
 const validateStudySpot = (req, res, next) => {
