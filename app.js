@@ -61,7 +61,7 @@ app.use(cookieParser('mySecret'))
 app.use(flash())
 // flash & locals middleware
 app.use((req, res, next) => {
-    // make currentUser available as a global variable in files rendering in this request 
+    // make res.locals.X available as X in files rendering in this request cycle. 
     res.locals.currentUser = req.user  // included in req body by passport.js 
     res.locals.success = req.flash('success')  // undefined unless created new spot
     res.locals.error = req.flash('error')
