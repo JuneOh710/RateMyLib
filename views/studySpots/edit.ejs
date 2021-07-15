@@ -11,19 +11,32 @@
         </div>
         <div class="mb-3">
             <label class="form-label" for="library">Enter the library</label>
-            <input class="form-control" type="text" name="studySpot[library]" id="library"
-                value="<%= studySpot.library.name %>" required>
-        </div>
+            <select class="form-select" name="studySpot[library]" id="librari" required>
 
-        <div class="mb-3">
-            <label class="form-label" for="image">Upload an image</label>
-            <input class="form-control" type="text" name="studySpot[image]" id="image" value="<%= studySpot.image %>"
-                required>
-        </div>
-        <div class="mb-3">
-            <input class="form-control" type="text" name="studySpot[username]" id="username"
-                value="<%= currentUser.username %>" hidden>
-        </div>
+                <% for( let library of libraries) { %>
+                    <% if (library.name===studySpot.library.name){ %>
+                        <option value="<%=  library.name %>" selected>
+                            <%= library.name %>
+                        </option>
+                        <% } else {%>
+                            <option value="<%=  library.name %>">
+                                <%= library.name %>
+                            </option>
+                            <% } %>
 
-        <button type="submit" class="btn btn-primary">submit</button>
+                                <% } %>
+            </select>
+        </div>
+        <%= studySpot.library.name %>
+            <div class="mb-3">
+                <label class="form-label" for="image">Upload an image</label>
+                <input class="form-control" type="text" name="studySpot[image]" id="image"
+                    value="<%= studySpot.image %>" required>
+            </div>
+            <div class="mb-3">
+                <input class="form-control" type="text" name="studySpot[username]" id="username"
+                    value="<%= currentUser.username %>" hidden>
+            </div>
+
+            <button type="submit" class="btn btn-primary">submit</button>
     </form>

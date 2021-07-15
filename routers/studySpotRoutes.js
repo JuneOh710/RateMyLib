@@ -1,12 +1,12 @@
 import express from 'express'
-import { validateStudySpot, validateRating, isLoggedIn, isAuthor, isRatingAuthor } from '../utilities/expressMiddleware.js'
+import { validateStudySpot, validateRating, isLoggedIn, isAuthor, isRatingAuthor, isFirstRating } from '../utilities/expressMiddleware.js'
 import StudySpot from '../models/studySpot.js'
 import Library from '../models/library.js'
 import Rating from '../models/rating.js'
 import { asyncHandle } from '../utilities/helpers.js'
+
+
 const studySpotRouter = express.Router()
-
-
 // get all study spots 
 studySpotRouter.get('/', asyncHandle(async (req, res, next) => {
     const studySpots = await StudySpot.find({}).populate('library', 'name')
@@ -33,11 +33,11 @@ studySpotRouter.post('/', isLoggedIn, validateStudySpot, asyncHandle(async (req,
 
 
 // edit study spot
-studySpotRouter.get('/:id/edit', isLoggedIn, asyncHandle(async (req, res, next) => {
+studySpotRouter.get('/:id/edit', isLoggedIn, isAuthor, asyncHandle(async (req, res, next) => {
     const { id } = req.params;
-    const studySpot = await StudySpot.findById(id)
-    studySpot.populate('library', 'name')
-    res.render(`studySpots/edit.ejs`, { studySpot })
+    const studySpot = await StudySpot.findById(id).populate('library', 'name')
+    const libraries = await Library.find({})
+    res.render(`studySpots/edit.ejs`, { studySpot, libraries })
 
 }))
 
@@ -54,7 +54,7 @@ studySpotRouter.put('/:id', isLoggedIn, isAuthor, validateStudySpot, asyncHandle
 // get details of study spot
 studySpotRouter.get('/:id', isLoggedIn, asyncHandle(async (req, res, next) => {
     const { id } = req.params;
-    const studySpot = await StudySpot.findById(id).populate('library', 'name').populate('ratings', 'score')
+    const studySpot = await StudySpot.findById(id).populate('library', 'name').populate('ratings')
     let totalRating = 0;
     studySpot.ratings.forEach(item => { totalRating += item.score })
     const averageRating = (totalRating / studySpot.ratings.length).toFixed(1)
@@ -64,6 +64,7 @@ studySpotRouter.get('/:id', isLoggedIn, asyncHandle(async (req, res, next) => {
 
 // delete study spot
 studySpotRouter.delete('/:id', isLoggedIn, isAuthor, asyncHandle(async (req, res, next) => {
+    const { id } = req.params;
     const studySpot = await StudySpot.findByIdAndDelete(id)
     const library = await Library.findById(studySpot.library)
     // delete the studySpot id in the libary document 
@@ -80,11 +81,11 @@ studySpotRouter.delete('/:id', isLoggedIn, isAuthor, asyncHandle(async (req, res
 
 // rating routes
 // add rating to studySpot
-studySpotRouter.patch('/:id/rate', isLoggedIn, validateRating, asyncHandle(async (req, res, next) => {
+studySpotRouter.patch('/:id/rate', isLoggedIn, validateRating, isFirstRating, asyncHandle(async (req, res, next) => {
     const { rating: score } = req.body.studySpot;
     const { id } = req.params;
-    const rating = new Rating({ score, user: 'placeHolder' })
-    const studySpot = await StudySpot.findById(id)
+    const rating = new Rating({ score, user: req.user.username })
+    const studySpot = await StudySpot.findById(id).populate('ratings', 'user')
     // add the rating to the studySpot's ratings
     studySpot.ratings.push(rating)
     await studySpot.save()
@@ -99,7 +100,6 @@ studySpotRouter.delete('/:spotId/rate/:ratingId', isLoggedIn, isRatingAuthor, as
     const studySpot = await StudySpot.findById(spotId)
     studySpot.ratings = studySpot.ratings.filter(rating => rating !== ratingId)
     await studySpot.save()
-
     res.redirect(`/studySpots/${spotId}`)
 }))
 

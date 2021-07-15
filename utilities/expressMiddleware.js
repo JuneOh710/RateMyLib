@@ -53,4 +53,16 @@ const isRatingAuthor = async (req, res, next) => {
     return next()
 }
 
-export { validateStudySpot, validateRating, isLoggedIn, isAuthor, isRatingAuthor }
+const isFirstRating = async (req, res, next) => {
+    const { id } = req.params;
+    const studySpot = await StudySpot.findById(id).populate('ratings', 'user')
+    const ratedBefore = studySpot.ratings.some(element => element.user === req.user.username)
+    // add the rating to the studySpot's ratings
+    if (ratedBefore) {
+        req.flash('error', 'access denied')
+        return res.redirect(`/studySpots/${id}`)
+    }
+    return next()
+}
+
+export { validateStudySpot, validateRating, isLoggedIn, isAuthor, isRatingAuthor, isFirstRating }
