@@ -1,4 +1,5 @@
 <% layout('layouts/boilerplate.ejs') %>
+    <link rel="stylesheet" href="/stars.css">
 
     <div class="col-lg-8 offset-lg-2">
         <h1>Study Spot details</h1>
@@ -17,7 +18,7 @@
             <ul class="list-group list-group-flush">
                 <li class="list-group-item">
                     <!-- when averageRating is NaN, it is not equal to even itself, so we check by: -->
-                    <%= averageRating==="NaN" ? "-no vatings available-" : `${averageRating}/5.0`%>
+                    <%= averageRating==="NaN" ? "-no vatings available-" : `${averageRating}/5.0 rating`%>
                         </a>
                 </li>
                 <li class="list-group-item text-muted">found in <a href="/libraries/<%= studySpot.library._id %>">
@@ -45,9 +46,21 @@
                 <!-- rate studySpot -->
                 <div class="card-body">
                     <form action="/studySpots/<%= studySpot._id %>/rate?_method=PATCH" method="POST">
-                        <label for="rating" class="h5 form-label">Rate this study spot</label>
-                        <input type="range" class="form-range" id="rating" step="1" min="1" max="5"
-                            name="studySpot[rating]">
+                        <fieldset class="starability-basic">
+                            <input type="radio" id="no-rate" class="input-no-rate" name="studySpot[rating]" value="0"
+                                checked aria-label="No rating." />
+                            <input type="radio" id="first-rate1" name="studySpot[rating]" value="1" />
+                            <label for="first-rate1" title="Terrible">1 star</label>
+                            <input type="radio" id="first-rate2" name="studySpot[rating]" value="2" />
+                            <label for="first-rate2" title="Not good">2 stars</label>
+                            <input type="radio" id="first-rate3" name="studySpot[rating]" value="3" />
+                            <label for="first-rate3" title="Average">3 stars</label>
+                            <input type="radio" id="first-rate4" name="studySpot[rating]" value="4" />
+                            <label for="first-rate4" title="Very good">4 stars</label>
+                            <input type="radio" id="first-rate5" name="studySpot[rating]" value="5" />
+                            <label for="first-rate5" title="Amazing">5 stars</label>
+                        </fieldset>
+
                         <button class="btn btn-primary">Submit rating</button>
                     </form>
                 </div>
@@ -62,8 +75,30 @@
                                 <form class="edit-form d-inline-block"
                                     action="/studySpots/<%= studySpot._id %>/rate/<%= rating._id %>?_method=PATCH"
                                     method="POST">
-                                    <input type="range" class="edit-range" value="<%= rating.score %>"
-                                        name="studySpot[rating]" min="1" max="5" step="1" disabled>
+                                    <fieldset class="starability-basic edit-stars" style="display: none;">
+                                        <input type="radio" id="no-rate" class="input-no-rate" name="studySpot[rating]"
+                                            value="0" aria-label="No rating." />
+                                        <input type="radio" id="first-rate1" name="studySpot[rating]" value="1"
+                                            <%=rating.score===1 ? "checked" : "" %>/>
+                                        <label for="first-rate1" title="Terrible">1 star</label>
+                                        <input type="radio" id="first-rate2" name="studySpot[rating]" value="2"
+                                            <%=rating.score===2 ? "checked" : "" %>/>
+                                        <label for="first-rate2" title="Not good">2 stars</label>
+                                        <input type="radio" id="first-rate3" name="studySpot[rating]" value="3"
+                                            <%=rating.score===3 ? " checked" : "" %>/>
+                                        <label for="first-rate3" title="Average">3 stars</label>
+                                        <input type="radio" id="first-rate4" name="studySpot[rating]" value="4"
+                                            <%=rating.score===4 ? " checked" : "" %>/>
+                                        <label for="first-rate4" title="Very good">4 stars</label>
+                                        <input type="radio" id="first-rate5" name="studySpot[rating]" value="5"
+                                            <%=rating.score===5 ? " checked" : "" %>/>
+                                        <label for="first-rate5" title="Amazing">5 stars</label>
+                                    </fieldset>
+                                    <p class="starability-result view-stars" data-rating="<%= rating.score %>">
+                                        Rated: <%= rating.score %> stars
+                                    </p>
+                                    <!-- <input type="range" class="edit-range" value="<%= rating.score %>"
+                                        name="studySpot[rating]" min="1" max="5" step="1" disabled> -->
                                     <button type="button" class="edit-button btn btn-info">Edit</button>
                                 </form>
 
@@ -81,7 +116,8 @@
 
     <script>
         const editButtons = document.querySelectorAll('.edit-button');
-        const ranges = document.querySelectorAll('.edit-range');
+        const viewStars = document.querySelectorAll('.view-stars')
+        const editStars = document.querySelectorAll('.edit-stars')
         for (let button of editButtons) {
             button.onclick = () => {
                 let newButton = document.createElement('button')
@@ -90,8 +126,11 @@
                 button.insertAdjacentElement('beforebegin', newButton)
                 button.remove()
                 // O(n^2) but I don't know any other way... 
-                for (let range of ranges) {
-                    range.disabled = false;
+                for (let star of viewStars) {
+                    star.style.display = "none"
+                }
+                for (let star of editStars) {
+                    star.style.display = "block"
                 }
             }
         }

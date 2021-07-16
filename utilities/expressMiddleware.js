@@ -14,12 +14,17 @@ const validateStudySpot = (req, res, next) => {
 }
 
 const validateRating = (req, res, next) => {
+    //todo: get current url by using {id}
+    const { id } = req.params;
     if (!req.body.studySpot) {
         return next(new AppError('there must be a rating', 404))
     }
-    const { rating } = req.body.studySpot;
+    const { rating: ratingString } = req.body.studySpot;
+    const rating = Number(ratingString)
     if (rating < 1 || rating > 5) {
-        return next(new AppError('rating must be in between 1 and 5', 404))
+        req.flash('error', 'cannot submit empty rating')
+        return res.redirect(`/studySpots/${id}`)
+
     }
     return next()
 }

@@ -36,6 +36,7 @@ app.set('view engine', 'ejs');  // read ejs files
 app.set('views', path.join(__dirname, 'views'))  // set absolute file path to views
 
 
+app.use(express.static('public'))
 app.use(express.static('seeds'));
 app.use(express.urlencoded({ extended: true }));  // to parse req.body from req from html form 
 app.use(methodOverride('_method'));  // to make put and delete requests from html form
