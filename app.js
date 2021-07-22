@@ -13,7 +13,65 @@ import flash from 'connect-flash'
 import passport from 'passport'
 import localStrategy from 'passport-local'
 import User from './models/user.js'
+import dotenv from 'dotenv'
+// import admin from 'firebase-admin';
+// // Imports the Google Cloud client library.
+// import { Storage } from '@google-cloud/storage'
 
+// // Instantiates a client. Explicitly use service account credentials by
+// // specifying the private key file. All clients in google-cloud-node have this
+// // helper, see https://github.com/GoogleCloudPlatform/google-cloud-node/blob/master/docs/authentication.md
+// // const projectId = 'rate-my-lib'
+// const keyFilename = '/Users/juneoh/Downloads/rate-my-lib-bfd68d314ed7.json'
+// // const storage = new Storage({ projectId, keyFilename });
+
+// admin.initializeApp({
+//     credential: admin.credential.cert(keyFilename),
+//     storageBucket: 'rate-my-lib.appspot.com'
+// });
+
+// const bucket = admin.storage().bucket()
+const filePath = '/Users/juneoh/Downloads/RateMyLib/uploads/0c53f0920187dd2fea5c70bd3688fadd';
+
+// The new ID for your GCS file
+const destFileName = 'your-new-file-name';
+
+async function uploadFile() {
+    await bucket.upload(filePath, {
+        destination: destFileName,
+    });
+
+    console.log(`${filePath} uploaded to default`);
+}
+
+// uploadFile().catch(console.error);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+if (process.env.NODE_ENV !== 'production') {
+    dotenv.config()
+}
 
 // __dirname is undefined when using es6 modules for some reason. 
 // so define __dirname as below

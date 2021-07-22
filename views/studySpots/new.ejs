@@ -1,7 +1,8 @@
 <% layout('layouts/boilerplate.ejs') %>
 
     <h1 class="col-lg-6 offset-lg-3 h4 mt-3 m">Add new study spot</h1>
-    <form action="/studySpots" method="POST" class="col-lg-6 offset-lg-3 needs-validation" novalidate>
+    <form enctype="multipart/form-data" action="/studySpots" method="POST" class="col-lg-6 offset-lg-3 needs-validation"
+        novalidate>
         <div class="mb-3">
             <label class="form-label" for="description">Enter study spot description</label>
             <input type="text" class="form-control" name="studySpot[description]" id="description" required>
@@ -17,10 +18,15 @@
             </select>
         </div>
 
-        <div class="mb-3">
+        <!-- <div class="mb-3">
             <label class="form-label" for="image">Upload an image</label>
             <input class="form-control" type="text" name="studySpot[image]" id="image" required>
+        </div> -->
+        <div class="mb-3">
+            <label class="form-label" for="image">Upload an image</label>
+            <input class="form-control" type="file" name="image" id="image" required>
         </div>
+
         <div class="mb-3">
             <input class="form-control" type="text" name="studySpot[username]" id="username"
                 value="<%= currentUser.username %>" hidden>

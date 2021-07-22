@@ -4,7 +4,8 @@
     <div class="col-lg-8 offset-lg-2">
         <h1>Study Spot details</h1>
         <div class="card mb-3">
-            <img src="../../../<%= studySpot.image%>" class="card-img-top img-fluid rounded" alt="...">
+
+            <img src="<%= studySpot.image.imageUrl %>" class="card-img-top img-fluid rounded" alt="...">
             <div class="card-body">
                 <h5 class="card-title">
                     <%= studySpot.description%>
@@ -18,7 +19,7 @@
             <ul class="list-group list-group-flush">
                 <li class="list-group-item">
                     <!-- when averageRating is NaN, it is not equal to even itself, so we check by: -->
-                    <%= averageRating==="NaN" ? "-no vatings available-" : `${averageRating}/5.0 rating`%>
+                    <%= averageRating==="NaN" ? "-no vatings available-" : `${averageRating}/5.0 average rating`%>
                         </a>
                 </li>
                 <li class="list-group-item text-muted">found in <a href="/libraries/<%= studySpot.library._id %>">
@@ -68,70 +69,65 @@
                 <% } %>
 
                     <!-- ratings list -->
-                    <% for( let rating of studySpot.ratings ) { %>
-                        <% if (rating.user===currentUser.username) { %>
-                            <div class="card-body">
-                                <!-- edit-form that displays existing rating score -->
-                                <form class="edit-form d-inline-block"
-                                    action="/studySpots/<%= studySpot._id %>/rate/<%= rating._id %>?_method=PATCH"
-                                    method="POST">
-                                    <fieldset class="starability-basic edit-stars" style="display: none;">
-                                        <input type="radio" id="no-rate" class="input-no-rate" name="studySpot[rating]"
-                                            value="0" aria-label="No rating." />
-                                        <input type="radio" id="first-rate1" name="studySpot[rating]" value="1"
-                                            <%=rating.score===1 ? "checked" : "" %>/>
-                                        <label for="first-rate1" title="Terrible">1 star</label>
-                                        <input type="radio" id="first-rate2" name="studySpot[rating]" value="2"
-                                            <%=rating.score===2 ? "checked" : "" %>/>
-                                        <label for="first-rate2" title="Not good">2 stars</label>
-                                        <input type="radio" id="first-rate3" name="studySpot[rating]" value="3"
-                                            <%=rating.score===3 ? " checked" : "" %>/>
-                                        <label for="first-rate3" title="Average">3 stars</label>
-                                        <input type="radio" id="first-rate4" name="studySpot[rating]" value="4"
-                                            <%=rating.score===4 ? " checked" : "" %>/>
-                                        <label for="first-rate4" title="Very good">4 stars</label>
-                                        <input type="radio" id="first-rate5" name="studySpot[rating]" value="5"
-                                            <%=rating.score===5 ? " checked" : "" %>/>
-                                        <label for="first-rate5" title="Amazing">5 stars</label>
-                                    </fieldset>
-                                    <p class="starability-result view-stars" data-rating="<%= rating.score %>">
-                                        Rated: <%= rating.score %> stars
-                                    </p>
-                                    <!-- <input type="range" class="edit-range" value="<%= rating.score %>"
-                                        name="studySpot[rating]" min="1" max="5" step="1" disabled> -->
-                                    <button type="button" class="edit-button btn btn-info">Edit</button>
-                                </form>
+                    <% let i=0 %>
+                        <% for( let rating of studySpot.ratings ) { %>
+                            <% if (rating.user===currentUser.username) { %>
+                                <div class="card-body">
+                                    <!-- edit-form that displays existing rating score -->
+                                    <form class="d-inline-block" id="edit-form"
+                                        action="/studySpots/<%= studySpot._id %>/rate/<%= rating._id %>?_method=PATCH"
+                                        method="POST">
+                                        <fieldset id="edit-star" class="starability-basic" style="display: none;">
+                                            <input type="radio" id="no-rate" class="input-no-rate"
+                                                name="studySpot[rating]" value="0" aria-label="No rating." />
+                                            <input type="radio" id="first-rate1" name="studySpot[rating]" value="1"
+                                                <%=rating.score===1 ? "checked" : "" %>/>
+                                            <label for="first-rate1" title="Terrible">1 star</label>
+                                            <input type="radio" id="first-rate2" name="studySpot[rating]" value="2"
+                                                <%=rating.score===2 ? "checked" : "" %>/>
+                                            <label for="first-rate2" title="Not good">2 stars</label>
+                                            <input type="radio" id="first-rate3" name="studySpot[rating]" value="3"
+                                                <%=rating.score===3 ? " checked" : "" %>/>
+                                            <label for="first-rate3" title="Average">3 stars</label>
+                                            <input type="radio" id="first-rate4" name="studySpot[rating]" value="4"
+                                                <%=rating.score===4 ? " checked" : "" %>/>
+                                            <label for="first-rate4" title="Very good">4 stars</label>
+                                            <input type="radio" id="first-rate5" name="studySpot[rating]" value="5"
+                                                <%=rating.score===5 ? " checked" : "" %>/>
+                                            <label for="first-rate5" title="Amazing">5 stars</label>
+                                        </fieldset>
+                                        <p class="starability-result" id="view-star" data-rating="<%= rating.score %>">
+                                            Rated: <%= rating.score %> stars
+                                        </p>
+                                        <button type="button" class="edit-button btn btn-info"
+                                            id="edit-button">Edit</button>
+                                    </form>
 
-                                <!-- delete existing rating -->
-                                <form class="d-inline-block"
-                                    action="/studySpots/<%= studySpot._id %>/rate/<%= rating._id %>?_method=DELETE"
-                                    method="POST">
-                                    <button class="btn btn-danger">Delete</button>
-                                </form>
-                            </div>
-                            <% } %>
+                                    <!-- delete existing rating -->
+                                    <form class="d-inline-block"
+                                        action="/studySpots/<%= studySpot._id %>/rate/<%= rating._id %>?_method=DELETE"
+                                        method="POST">
+                                        <button class="btn btn-danger">Delete</button>
+                                    </form>
+                                </div>
                                 <% } %>
+                                    <% } %>
         </div>
     </div>
 
     <script>
-        const editButtons = document.querySelectorAll('.edit-button');
-        const viewStars = document.querySelectorAll('.view-stars')
-        const editStars = document.querySelectorAll('.edit-stars')
-        for (let button of editButtons) {
-            button.onclick = () => {
+        const editButton = document.getElementById('edit-button')
+        const viewStar = document.getElementById('view-star')
+        const editStar = document.getElementById('edit-star')
+        if (editButton) {
+            editButton.onclick = () => {
                 let newButton = document.createElement('button')
                 newButton.className = 'btn btn-primary mx-1'
                 newButton.innerText = 'confirm'
-                button.insertAdjacentElement('beforebegin', newButton)
-                button.remove()
-                // O(n^2) but I don't know any other way... 
-                for (let star of viewStars) {
-                    star.style.display = "none"
-                }
-                for (let star of editStars) {
-                    star.style.display = "block"
-                }
+                editButton.insertAdjacentElement('beforebegin', newButton)
+                editButton.remove()
+                viewStar.style.display = "none"
+                editStar.style.display = "block"
             }
         }
     </script>

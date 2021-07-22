@@ -7,8 +7,14 @@ const studySpotSchema = new mongoose.Schema({
         required: true
     },
     image: {
-        type: String,
-        required: true
+        imageName: {
+            type: String,
+            required: true
+        },
+        imageUrl: {
+            type: String,
+            required: true
+        }
     },
     library: {
         type: mongoose.Schema.Types.ObjectId,

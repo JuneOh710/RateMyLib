@@ -5,6 +5,7 @@ import Rating from '../models/rating.js';
 
 // server-side validation middleware
 const validateStudySpot = (req, res, next) => {
+    req.body.studySpot.image = { imageName: req.file.originalname, imageUrl: req.file.publicUrl }
     const validationError = studySpotValidator.validate(req.body).error;
     if (validationError) {
         const message = validationError.details[0].message;
@@ -14,7 +15,6 @@ const validateStudySpot = (req, res, next) => {
 }
 
 const validateRating = (req, res, next) => {
-    //todo: get current url by using {id}
     const { id } = req.params;
     if (!req.body.studySpot) {
         return next(new AppError('there must be a rating', 404))

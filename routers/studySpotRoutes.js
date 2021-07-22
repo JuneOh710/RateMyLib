@@ -2,6 +2,15 @@ import express from 'express'
 import { validateStudySpot, validateRating, isLoggedIn, isAuthor, isRatingAuthor, isFirstRating } from '../utilities/expressMiddleware.js'
 import { asyncHandle } from '../utilities/helpers.js'
 import *  as controller from '../controllers/studySpotController.js'
+import multer from 'multer'
+import { bucket, uploadImage } from '../utilities/firebaseSetup.js'
+
+const upload = multer({
+    storage: multer.memoryStorage(),
+    limits: {
+        fileSize: 5 * 1024 * 1024, // keep images size < 5 MB
+    },
+})
 
 const studySpotRouter = express.Router()
 // get all study spots 
@@ -9,7 +18,8 @@ studySpotRouter.get('/', asyncHandle(controller.index))
 
 // add new study spot
 studySpotRouter.get('/new', isLoggedIn, asyncHandle(controller.getCreateForm))
-studySpotRouter.post('/', isLoggedIn, validateStudySpot, asyncHandle(controller.createStudySpot))
+studySpotRouter.post('/', isLoggedIn, upload.single('image'), uploadImage, validateStudySpot, asyncHandle(controller.createStudySpot))
+
 
 // edit study spot
 studySpotRouter.get('/:id/edit', isLoggedIn, isAuthor, asyncHandle(controller.getEditForm))
