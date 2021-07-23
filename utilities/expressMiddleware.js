@@ -3,13 +3,29 @@ import AppError from './AppError.js'
 import StudySpot from '../models/studySpot.js';
 import Rating from '../models/rating.js';
 
+// include req.file into req.body.studySpot
+// or add existing image to req.body.studySpot
+const completeRequestBody = async (req, res, next) => {
+    if (req.file) {
+        req.body.studySpot.image = { imageName: req.file.uniqueName, imageUrl: req.file.publicUrl }
+    } else {
+        const { id } = req.params;
+        const studySpot = await StudySpot.findById(id)
+        const image = Object.create(null)
+        image.imageName = studySpot.image.imageName;
+        image.imageUrl = studySpot.image.imageUrl;
+        req.body.studySpot.image = image;
+    }
+    next()
+}
+
 // server-side validation middleware
 const validateStudySpot = (req, res, next) => {
-    req.body.studySpot.image = { imageName: req.file.originalname, imageUrl: req.file.publicUrl }
+    console.log(req.body.studySpot)
     const validationError = studySpotValidator.validate(req.body).error;
     if (validationError) {
         const message = validationError.details[0].message;
-        return next(new AppError(message, 400))
+        return next(new AppError(message, 404))
     }
     next()
 }
@@ -70,4 +86,4 @@ const isFirstRating = async (req, res, next) => {
     return next()
 }
 
-export { validateStudySpot, validateRating, isLoggedIn, isAuthor, isRatingAuthor, isFirstRating }
+export { validateStudySpot, completeRequestBody, validateRating, isLoggedIn, isAuthor, isRatingAuthor, isFirstRating }

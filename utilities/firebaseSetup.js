@@ -1,5 +1,7 @@
 import admin from 'firebase-admin';
 import AppError from './AppError.js';
+import { v4 as uuidv4 } from 'uuid'
+
 // Imports the Google Cloud client library.
 const keyFilename = '/Users/juneoh/Downloads/rate-my-lib-bfd68d314ed7.json'
 // const storage = new Storage({ projectId, keyFilename });
@@ -15,10 +17,10 @@ export function uploadImage(req, res, next) {
     try {
         if (!req.file) {
             throw new AppError('No file uploaded', 400)
-
         }
         // This is where we'll upload our file to Cloud Storage
-        const blob = bucket.file(req.file.originalname);
+        req.file.uniqueName = uuidv4()
+        const blob = bucket.file(req.file.uniqueName);
         // Create writable stream and specifying file mimetype
         const blobWriter = blob.createWriteStream({
             metadata: {
@@ -38,6 +40,16 @@ export function uploadImage(req, res, next) {
 
         // When there is no more data to be consumed from the stream
         blobWriter.end(req.file.buffer);
+    } catch (error) {
+        next(error)
+    }
+}
+
+
+// not a middleware
+export async function deleteImageByName(imageName) {
+    try {
+        await bucket.file(imageName).delete()
     } catch (error) {
         next(error)
     }

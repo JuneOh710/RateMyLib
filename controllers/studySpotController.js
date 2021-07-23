@@ -1,6 +1,7 @@
 import StudySpot from "../models/studySpot.js"
 import Library from "../models/library.js"
 import Rating from "../models/rating.js"
+import { deleteImageByName } from "../utilities/firebaseSetup.js"
 
 export const index = async (req, res, next) => {
     const studySpots = await StudySpot.find({}).populate('library', 'name')
@@ -32,9 +33,9 @@ export const getEditForm = async (req, res, next) => {
 
 export const editStudySpot = async (req, res, next) => {
     const { id } = req.params;
-    const { description, library: libraryName, image, username } = req.body.studySpot;
+    const { description, library: libraryName, username } = req.body.studySpot;
     const library = await Library.findOne({ name: libraryName })
-    await StudySpot.findByIdAndUpdate(id, { description, library, image, username })
+    await StudySpot.findByIdAndUpdate(id, { description, library, username })
     res.redirect(`/studySpots/${id}`)
 }
 
@@ -50,6 +51,7 @@ export const viewStudySpot = async (req, res, next) => {
 export const deleteStudySpot = async (req, res, next) => {
     const { id } = req.params;
     const studySpot = await StudySpot.findByIdAndDelete(id)
+    await deleteImageByName(studySpot.image.imageName)
     const library = await Library.findById(studySpot.library)
     // delete the studySpot id in the libary document 
     library.studySpots = library.studySpots.filter(s => s._id !== id)
