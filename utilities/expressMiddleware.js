@@ -21,7 +21,6 @@ const completeRequestBody = async (req, res, next) => {
 
 // server-side validation middleware
 const validateStudySpot = (req, res, next) => {
-    console.log(req.body.studySpot)
     const validationError = studySpotValidator.validate(req.body).error;
     if (validationError) {
         const message = validationError.details[0].message;

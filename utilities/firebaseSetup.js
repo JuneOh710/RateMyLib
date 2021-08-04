@@ -4,11 +4,10 @@ import { v4 as uuidv4 } from 'uuid'
 
 // Imports the Google Cloud client library.
 const keyFilename = '/Users/juneoh/Downloads/rate-my-lib-bfd68d314ed7.json'
-// const storage = new Storage({ projectId, keyFilename });
 
 const firebaseAdmin = admin.initializeApp({
     credential: admin.credential.cert(keyFilename),
-    storageBucket: 'rate-my-lib.appspot.com'
+    storageBucket: process.env.GCLOUD_BUCKET
 });
 
 export const bucket = firebaseAdmin.storage().bucket()
