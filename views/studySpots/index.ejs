@@ -2,33 +2,42 @@
 
     <div class="col-md-10 offset-md-1">
         <h1>All Study Spots</h1>
-
-        <% for (let s of studySpots){ %>
-            <div class="card" mb-3>
-                <div class="row">
-                    <div class="col-md-4">
-                        <img class="img-fluid" alt="" src="<%=s.image.imageUrl%>">
-                    </div>
-                    <div class="col-md-8">
-                        <div class="card-body">
-                            <p class="card-text">
-                                <%= s.description %>
-                            </p>
-                            <p class="card-text">
-                                <small class="text-muted">
-                                    located in <%= s.library.name %>
-                                </small>
-                            </p>
-                            <p class="card-text">
-                                <small class="text-muted">
-                                    Submitted by <%= s.username %>
-                                </small>
-                            </p>
-                            <a class="btn btn-primary" href="/studySpots/<%=s._id%>">Details
-                            </a>
+        <% if (studySpots.length) { %>
+            <% for (let s of studySpots){ %>
+                <div class="card" mb-3>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <img class="img-fluid" alt="" src="<%=s.image.imageUrl%>">
+                        </div>
+                        <div class="col-md-8">
+                            <div class="card-body">
+                                <p class="card-text">
+                                    <%= s.description %> - <small>
+                                            <%= s.username %>
+                                        </small>
+                                </p>
+                                <p class="card-text">
+                                    <small class="text-muted">
+                                        located in <%= s.library.name %>
+                                    </small>
+                                </p>
+                                <!-- <p class="card-text">
+                                    <small class="text-muted">
+                                        Submitted by <%= s.username %>
+                                    </small>
+                                </p> -->
+                                <a class="btn btn-primary" href="/studySpots/<%=s._id%>">Details
+                                </a>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            <% } %>
+                <% } %>
+                    <% } else { %>
+                        <div class="mb-3">
+                            <h3>wow such empty...</h3>
+                            no one added anything :(
+                        </div>
+                        <% } %>
+
     </div>

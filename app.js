@@ -15,21 +15,6 @@ import localStrategy from 'passport-local'
 import User from './models/user.js'
 import dotenv from 'dotenv'
 
-const filePath = '/Users/juneoh/Downloads/RateMyLib/uploads/0c53f0920187dd2fea5c70bd3688fadd';
-
-// The new ID for your GCS file
-const destFileName = 'your-new-file-name';
-
-async function uploadFile() {
-    await bucket.upload(filePath, {
-        destination: destFileName,
-    });
-
-    console.log(`${filePath} uploaded to default`);
-}
-
-// uploadFile().catch(console.error);
-
 if (process.env.NODE_ENV !== 'production') {
     dotenv.config()
 }

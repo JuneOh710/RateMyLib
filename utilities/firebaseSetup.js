@@ -1,9 +1,11 @@
 import admin from 'firebase-admin';
 import AppError from './AppError.js';
 import { v4 as uuidv4 } from 'uuid'
+import dotenv from 'dotenv'
+dotenv.config()
 
 // Imports the Google Cloud client library.
-const keyFilename = '/Users/juneoh/Downloads/rate-my-lib-bfd68d314ed7.json'
+const keyFilename = '/Users/juneoh/Downloads/RateMyLib/rate-my-lib-bfd68d314ed7.json'
 
 const firebaseAdmin = admin.initializeApp({
     credential: admin.credential.cert(keyFilename),
@@ -17,7 +19,7 @@ export function uploadImage(req, res, next) {
         if (!req.file) {
             throw new AppError('No file uploaded', 400)
         }
-        // This is where we'll upload our file to Cloud Storage
+        // upload file to Cloud Storage
         req.file.uniqueName = uuidv4()
         const blob = bucket.file(req.file.uniqueName);
         // Create writable stream and specifying file mimetype

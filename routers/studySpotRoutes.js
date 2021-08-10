@@ -33,6 +33,7 @@ studySpotRouter.get('/:id', isLoggedIn, asyncHandle(controller.viewStudySpot))
 // delete study spot
 studySpotRouter.delete('/:id', isLoggedIn, isAuthor, asyncHandle(controller.deleteStudySpot))
 
+
 // rating routes
 // add rating to studySpot
 studySpotRouter.patch('/:id/rate', isLoggedIn, validateRating, isFirstRating,

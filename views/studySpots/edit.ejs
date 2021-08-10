@@ -12,7 +12,6 @@
         <div class="mb-3">
             <label class="form-label" for="library">Enter the library</label>
             <select class="form-select" name="studySpot[library]" id="librari" required>
-
                 <% for( let library of libraries) { %>
                     <% if (library.name===studySpot.library.name){ %>
                         <option value="<%=  library.name %>" selected>

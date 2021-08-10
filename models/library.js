@@ -10,8 +10,15 @@ const librarySchema = new mongoose.Schema({
         requried: true
     },
     location: {
-        type: String,
-        required: true
+        type: {
+            type: String,
+            enum: ['Point'],
+            required: true
+        },
+        coordinates: {
+            type: [Number],
+            required: true
+        }
     },
     studySpots: [{
         type: mongoose.Schema.Types.ObjectId,
