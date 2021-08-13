@@ -1,5 +1,8 @@
 <% layout('layouts/boilerplate.ejs') %>
-
+    <script>
+        navLink = document.getElementById('studySpots-link')
+        navLink.classList.add('active')
+    </script>
     <div class="col-md-10 offset-md-1">
         <h1>All Study Spots</h1>
         <% if (studySpots.length) { %>

@@ -1,6 +1,9 @@
 <% layout('layouts/boilerplate.ejs') %>
-
-    <h1 class="col-lg-6 offset-lg-3 h4 mt-3 m">Add new study spot</h1>
+    <script>
+        navLink = document.getElementById('new-studySpot-link')
+        navLink.classList.add('active')
+    </script>
+    <h1 class=" col-lg-6 offset-lg-3 h4 mt-3 m">Add new study spot</h1>
     <form enctype="multipart/form-data" action="/studySpots" method="POST" class="col-lg-6 offset-lg-3 needs-validation"
         novalidate>
         <div class="mb-3">

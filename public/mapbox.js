@@ -5,8 +5,10 @@ const map = new mapboxgl.Map({
     container: 'map', // container ID
     style: 'mapbox://styles/mapbox/streets-v11', // style URL
     center: libraryCoordinates, // starting position [lng, lat]
-    zoom: 13 // starting zoom
+    zoom: 15 // starting zoom
 });
+
+map.addControl(new mapboxgl.NavigationControl())
 
 // Create a default Marker and add it to the map.
 const marker1 = new mapboxgl.Marker()

@@ -14,6 +14,10 @@ import passport from 'passport'
 import localStrategy from 'passport-local'
 import User from './models/user.js'
 import dotenv from 'dotenv'
+import mongoSanitize from 'express-mongo-sanitize'
+import helmet from 'helmet'
+import MongoStore from 'connect-mongo'
+
 
 if (process.env.NODE_ENV !== 'production') {
     dotenv.config()
@@ -25,7 +29,9 @@ const __dirname = path.resolve(path.dirname(decodeURI(new URL(import.meta.url).p
 // ms * s * min * hour * day * week
 const oneWeek = 1000 * 60 * 60 * 24 * 7
 // connecting to mongoose
-mongoose.connect('mongodb://localhost:27017/rateMyLib', {
+// const atlasUrl = process.env.ATLAS_URL;
+const atlasUrl = 'mongodb://localhost:27017/rateMyLib'
+mongoose.connect(atlasUrl, {
     useNewUrlParser: true,
     useCreateIndex: true,
     useUnifiedTopology: true,
@@ -33,7 +39,7 @@ mongoose.connect('mongodb://localhost:27017/rateMyLib', {
 })
     .then(console.log('Database connected'))
     .catch(err => console.log('connection error:', err))
-const app = express();
+const app = express()
 
 app.engine('ejs', engine);  // use layout system 
 app.set('view engine', 'ejs');  // read ejs files
@@ -46,7 +52,13 @@ app.use(express.urlencoded({ extended: true }));  // to parse req.body from req 
 app.use(methodOverride('_method'));  // to make put and delete requests from html form
 // session middleware
 app.use(session({
-    secret: 'hehe',
+    secret: process.env.SESSION_KEY,
+    store: MongoStore.create({
+        mongoUrl: atlasUrl,
+        touchAfter: 24 * 3600,
+        secret: process.env.SESSION_KEY
+    }),
+    name: 'yourSession',
     resave: false,
     saveUninitialized: true,
     cookie: {
@@ -72,6 +84,14 @@ app.use((req, res, next) => {
     res.locals.error = req.flash('error')
     next()
 })
+
+app.use(
+    mongoSanitize({
+        replaceWith: '_',
+    }),
+)
+app.use(helmet({ contentSecurityPolicy: false }))
+
 
 // home route
 app.get('/', (req, res) => {

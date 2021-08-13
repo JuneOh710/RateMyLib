@@ -19,6 +19,10 @@ export function uploadImage(req, res, next) {
         if (!req.file) {
             throw new AppError('No file uploaded', 400)
         }
+        if (req.file.minetype !== 'image/png') {
+            throw new AppError('you must upload an image', 400)
+        }
+
         // upload file to Cloud Storage
         req.file.uniqueName = uuidv4()
         const blob = bucket.file(req.file.uniqueName);
