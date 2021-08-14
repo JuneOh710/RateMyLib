@@ -30,7 +30,7 @@ const __dirname = path.resolve(path.dirname(decodeURI(new URL(import.meta.url).p
 const oneWeek = 1000 * 60 * 60 * 24 * 7
 // connecting to mongoose
 // const atlasUrl = process.env.ATLAS_URL;
-const atlasUrl = 'mongodb://localhost:27017/rateMyLib'
+const atlasUrl = process.env.ATLAS_URL || 'mongodb://localhost:27017/rateMyLib'
 mongoose.connect(atlasUrl, {
     useNewUrlParser: true,
     useCreateIndex: true,
@@ -42,21 +42,22 @@ mongoose.connect(atlasUrl, {
 const app = express()
 
 app.engine('ejs', engine);  // use layout system 
-app.set('view engine', 'ejs');  // read ejs files
+app.set('view engine', 'ejs')  // read ejs files
 app.set('views', path.join(__dirname, 'views'))  // set absolute file path to views
 
 
 app.use(express.static('public'))
-app.use(express.static('seeds'));
-app.use(express.urlencoded({ extended: true }));  // to parse req.body from req from html form 
-app.use(methodOverride('_method'));  // to make put and delete requests from html form
+app.use(express.static('seeds'))
+app.use(express.urlencoded({ extended: true }))  // to parse req.body from req from html form 
+app.use(methodOverride('_method'))  // to make put and delete requests from html form
 // session middleware
+const secret = process.env.SESSION_SECRET || 'BlenderBottle'
 app.use(session({
-    secret: process.env.SESSION_KEY,
+    secret: secret,
     store: MongoStore.create({
         mongoUrl: atlasUrl,
         touchAfter: 24 * 3600,
-        secret: process.env.SESSION_KEY
+        secret: secret
     }),
     name: 'yourSession',
     resave: false,
