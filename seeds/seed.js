@@ -1,7 +1,8 @@
 import mongoose from 'mongoose';
 import Library from '../models/library.js';
-// import geocoding from '@mapbox/mapbox-sdk/services/geocoding.js';
-// const mbxGeocoding = geocoding;
+import dotenv from 'dotenv'
+dotenv.config()
+
 import { readFile } from 'fs/promises';
 
 const libraryLocationMap = JSON.parse(
@@ -10,12 +11,9 @@ const libraryLocationMap = JSON.parse(
     )
 );
 
+const atlasUrl = process.env.ATLAS_URL;
 
-// dotenv.config()
-// console.log('===========================')
-// const geocodingService = mbxGeocoding({ accessToken: process.env.MAPBOX_TOKEN });
-
-mongoose.connect('mongodb://localhost:27017/rateMyLib', {
+mongoose.connect(atlasUrl, {
     useNewUrlParser: true,
     useCreateIndex: true,
     useUnifiedTopology: true,
