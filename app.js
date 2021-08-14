@@ -29,8 +29,8 @@ const __dirname = path.resolve(path.dirname(decodeURI(new URL(import.meta.url).p
 // ms * s * min * hour * day * week
 const oneWeek = 1000 * 60 * 60 * 24 * 7
 // connecting to mongoose
-// const atlasUrl = process.env.ATLAS_URL;
-const atlasUrl = process.env.ATLAS_URL || 'mongodb://localhost:27017/rateMyLib'
+const atlasUrl = process.env.ATLAS_URL;
+// const atlasUrl = 'mongodb://localhost:27017/rateMyLib'
 mongoose.connect(atlasUrl, {
     useNewUrlParser: true,
     useCreateIndex: true,
